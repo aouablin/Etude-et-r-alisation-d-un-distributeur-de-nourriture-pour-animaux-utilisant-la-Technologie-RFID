@@ -4,12 +4,12 @@
 Ce projet consiste en la conception et la réalisation d'un distributeur automatique de nourriture pour animaux basé sur la technologie RFID. Un tag RFID est utilisé pour identifier l'animal autorisé à accéder à la nourriture. Lorsqu'un tag valide est détecté, un servomoteur s'active pour distribuer la nourriture, et un écran LCD affiche les informations en temps réel.
 
 ## 🛠 Matériels Utilisés:
-- 🛠️ **Carte Arduino Uno**
-- 🔍 **Module RFID RC522**
-- 💡 **Afficheur LCD 16x2 avec interface I2C**
-- 🛠️ **Servomoteur SG90**
-- 💪 **Alimentation 5V**
-- 🛠️ Divers composants électroniques (câbles, résistances, etc.)
+- **Carte Arduino Uno**
+-  **Module RFID RC522**
+-  **Afficheur LCD 16x2 avec interface I2C**
+-  **Servomoteur SG90**
+-  **Alimentation 5V**
+-  Divers composants électroniques (câbles, résistances, etc.)
 
 ## 🎨 Schéma de Câblage:
 Un schéma de connexion a été réalisé pour organiser les différents composants. Voici les connexions principales :
@@ -26,7 +26,7 @@ Un schéma de connexion a été réalisé pour organiser les différents composa
    - Installer la bibliothèque **LiquidCrystal_I2C** pour l'affichage LCD.
    - Téléverser le code sur l'Arduino Uno.
 
-2. 👾 **Fonctionnement**
+2.  **Fonctionnement**
    - Approcher un tag RFID autorisé.
    - L'écran LCD affiche l'état du système.
    - Si le tag est reconnu, le servomoteur distribue la nourriture.

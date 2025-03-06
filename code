@@ -1,0 +1,119 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Servo.h>
+
+#define SS_PIN 10
+#define RST_PIN 8
+
+// Initialisation des broches pour le servomoteur et l'afficheur LCD
+const int servoPin = 9;
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // Adresse I2C du module LCD, nombre de colonnes et de lignes
+
+// Initialisation du module RFID
+MFRC522 rfid(SS_PIN, RST_PIN);
+
+// Initialisation du servomoteur
+Servo myservo;
+
+// Initialisation des variables
+String chatID = "930078fa";  // ID du chat
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+
+  myservo.attach(servoPin);
+
+  // Initialisation de l'afficheur LCD
+  lcd.begin(16, 2);
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Initialisation...");
+  delay(1000);
+}
+
+void loop() {
+  // Reset de l'affichage sur l'écran LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("En attente");
+
+  // Recherche d'un tag RFID
+  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+    String id = "";
+
+    // Construire l'ID sous forme de chaîne
+    for (byte i = 0; i < rfid.uid.size; i++) {
+      id += String(rfid.uid.uidByte[i] < 0x10 ? "0" : "");
+      id += String(rfid.uid.uidByte[i], HEX);
+    }
+
+    // Afficher l'ID sur la console série
+    Serial.println("ID du tag : " + id);
+
+    // Vérifier si l'ID correspond à celui du chat
+    if (id.equals(chatID)) {
+      Serial.println("Accès autorisé !");
+      // Déclencher le servomoteur pour la distribution
+      distributeFood();
+    } else {
+      Serial.println("Erreur - Pas d'accès");
+      Serial.println("Distribution annulée");
+
+      // Afficher un message sur l'écran LCD en cas d'ID incorrect
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Erreur ");
+      lcd.setCursor(0, 1);
+      lcd.print("pas du Distribution");
+      delay(2000);
+    }
+
+    // Message de fin sur l'écran LCD
+    delay(1000);  // Délai pour éviter une lecture multiple du même tag
+    rfid.PICC_HaltA();
+    rfid.PCD_StopCrypto1();
+  } else {
+    // Si aucun tag n'est présent, afficher un message générique sur l'écran LCD
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("pas du tag");
+    delay(1000);
+  }
+}
+
+
+void distributeFood() {
+  // Affichage sur l'écran LCD
+  lcd.setCursor(0, 0);
+  lcd.print("Distribution");
+  lcd.setCursor(0, 1);
+  lcd.print("en cours");
+
+  // Déplacer le servomoteur de 0 à 180 degrés
+  for (int angle = 0; angle <= 180; angle += 1) {
+    myservo.write(angle);
+    delay(15);
+  }
+
+  // Délai pour simuler la distribution
+  delay(2000);
+
+  // Revenir à la position initiale
+  for (int angle = 180; angle >= 0; angle -= 1) {
+    myservo.write(angle);
+    delay(15);
+  }
+
+  // Message de fin sur l'écran LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Distribution");
+  lcd.setCursor(0, 1);
+  lcd.print("terminée");
+  delay(2000);
+
+}

@@ -1,6 +1,5 @@
 # 🐱 Distributeur Automatique de Nourriture pour Animaux avec RFID 🐾
 
-## ✨ Description du Projet
 Ce projet consiste en la conception et la réalisation d'un distributeur automatique de nourriture pour animaux basé sur la technologie RFID. Un tag RFID est utilisé pour identifier l'animal autorisé à accéder à la nourriture. Lorsqu'un tag valide est détecté, un servomoteur s'active pour distribuer la nourriture, et un écran LCD affiche les informations en temps réel.
 
 ## 🛠 Matériels Utilisés:
